@@ -83,6 +83,5 @@ describe('Extra Credit: tree is rebalanced', () => {
   test("right left imbalance", expect(rebalance(createRopeFromMap({
     text: 'a',
     right: { text: 'c', left: { text: 'b' } },
-  }))).toEqual(balancedTree)
-  expect(rotateLeft(balancedTree)).toEqual(balancedTree))
+  }))).toEqual(balancedTree))
 })
