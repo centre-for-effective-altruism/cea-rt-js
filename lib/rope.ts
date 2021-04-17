@@ -53,30 +53,30 @@ export class Rope {
   }
 
   // how deep the tree is (I.e. the maximum depth of children)
-  depth(): number {
-    return 1 + Math.max(this.leftDepth(), this.rightDepth())
+  height(): number {
+    return 1 + Math.max(this.leftHeight(), this.rightHeight())
   }
 
   /*
     Whether the rope is balanced, i.e. whether any subtrees have branches
-    which differ by more than one in depth. 
+    which differ by more than one in height. 
   */
   isBalanced(): boolean {
     const leftBalanced = this.left ? this.left.isBalanced() : true
     const rightBalanced = this.right ? this.right.isBalanced() : true
 
     return leftBalanced && rightBalanced
-      && Math.abs(this.leftDepth() - this.rightDepth()) < 2
+      && Math.abs(this.leftHeight() - this.rightHeight()) < 2
   }
 
-  leftDepth(): number {
+  leftHeight(): number {
     if (!this.left) return 0
-    return this.left.depth()
+    return this.left.height()
   }
 
-  rightDepth(): number {
+  rightHeight(): number {
     if (!this.right) return 0
-    return this.right.depth()
+    return this.right.height()
   }
 
   // Helper method which converts the rope into an associative array
@@ -118,7 +118,9 @@ export function append(rope: Rope, text: string): Rope {
   return rope
 }
 
-export function splitAt(rope: Rope, position: number): { left: Rope, right: Rope } {
+// This is an internal API. You can implement it however you want. 
+// (E.g. you can choose to mutate the input rope or not)
+function splitAt(rope: Rope, position: number): { left: Rope, right: Rope } {
   // TODO
   return { left: undefined, right: undefined }
 }
