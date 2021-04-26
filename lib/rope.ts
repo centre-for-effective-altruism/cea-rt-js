@@ -1,3 +1,9 @@
+/*
+  Note: this file is in typescript, but you do not need to use typings if you don't want.
+
+  The type annotations are just there in case they are helpful.
+*/
+
 export class Rope {
   text: string;
   size: number;
