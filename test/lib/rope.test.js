@@ -8,8 +8,6 @@ import {
 */
 describe("rope basics", () => {
   test("constructor", () => expect(new Rope('test').toString()).toEqual('test'));
-  test("append", () => expect(append(new Rope('test'), '123').toString()).toEqual('test123'));
-  test("prepend", () => expect(prepend(new Rope('test'), '123').toString()).toEqual('123test'));
 });
 
 describe("insertion", () => {

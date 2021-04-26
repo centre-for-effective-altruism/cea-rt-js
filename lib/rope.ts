@@ -15,34 +15,6 @@ export class Rope {
     this.size = text.length
   }
 
-  // Returns the character at a given index
-  characterAt(position: number) {
-    const leftSize = this.left?.totalSize() || 0
-    if (position < leftSize) {
-      return this.left.characterAt(position)
-    }
-    if (position < leftSize + this.size) {
-      return this.text[position - leftSize]
-    }
-    return this.right.characterAt(position - (leftSize + this.size))
-  }
-
-  // prints contents including showing the hierarchy
-  // it's not required for this function to work, it's just there to help with debugging
-  // 
-  // e.g. if the  root node has ABC, the left node has DEF, and the right node has GHI, 
-  // the output will look like:
-  // -DEF
-  // ABC
-  // -GHI
-  toStringDebug(indentLevel: number = 0): string {
-    const leftText = this.left ? this.left.toStringDebug(indentLevel + 1) : ''
-    const rightText = this.right ? this.right.toStringDebug(indentLevel + 1) : ''
-    return leftText +
-      Array(indentLevel + 1).join('-') + this.text + '\n'
-      + rightText
-  }
-
   // just prints the stored text
   toString(): string {
     const leftText = this.left ? this.left.toString() : ''
@@ -104,24 +76,6 @@ export function createRopeFromMap(map: MapRepresentation): Rope {
   if (map.left) rope.left = createRopeFromMap(map.left)
   if (map.right) rope.right = createRopeFromMap(map.right)
   return rope;
-}
-
-export function prepend(rope: Rope, text: string): Rope {
-  if (rope.left) {
-    prepend(rope.left, text)
-  } else {
-    rope.left = new Rope(text)
-  }
-  return rope
-}
-
-export function append(rope: Rope, text: string): Rope {
-  if (rope.right) {
-    append(rope.right, text)
-  } else {
-    rope.right = new Rope(text)
-  }
-  return rope
 }
 
 // This is an internal API. You can implement it however you want. 
