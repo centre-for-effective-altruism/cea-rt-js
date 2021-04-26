@@ -1,5 +1,5 @@
 import {
-  Rope, insert, append, prepend, rotateRight, deleteRange,
+  Rope, insert, rotateRight, deleteRange,
   createRopeFromMap, rebalance, rotateLeft
 } from '../../lib/rope'
 
