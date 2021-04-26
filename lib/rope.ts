@@ -10,9 +10,10 @@ export class Rope {
   left?: Rope;
   right?: Rope;
 
-  constructor(text) {
+  // Note: depending on your implementation, you may want to to change this constructor
+  constructor(text, size) {
     this.text = text;
-    this.size = text.length
+    this.size = size;
   }
 
   // just prints the stored text
@@ -20,14 +21,6 @@ export class Rope {
     const leftText = this.left ? this.left.toString() : ''
     const rightText = this.right ? this.right.toString() : ''
     return leftText + this.text + rightText
-  }
-
-  // How long the text stored is in all of the children combined
-  // This is the same as this.toString().length
-  totalSize(): number {
-    const leftText = this.left ? this.left.totalSize() : 0
-    const rightText = this.right ? this.right.totalSize() : 0
-    return leftText + this.text.length + rightText
   }
 
   // how deep the tree is (I.e. the maximum depth of children)
@@ -62,7 +55,8 @@ export class Rope {
   // Only used for debugging, this has no functional purpose
   toMap(): MapRepresentation {
     const mapVersion: MapRepresentation = {
-      text: this.text
+      text: this.text,
+      size: this.size
     }
     if (this.right) mapVersion.right = this.right.toMap()
     if (this.left) mapVersion.left = this.left.toMap()
@@ -70,9 +64,9 @@ export class Rope {
   }
 }
 
-type MapRepresentation = { text: string, left?: MapRepresentation, right?: MapRepresentation }
+type MapRepresentation = { text: string, left?: MapRepresentation, right?: MapRepresentation, size: number }
 export function createRopeFromMap(map: MapRepresentation): Rope {
-  const rope = new Rope(map.text)
+  const rope = new Rope(map.text, map.size)
   if (map.left) rope.left = createRopeFromMap(map.left)
   if (map.right) rope.right = createRopeFromMap(map.right)
   return rope;
