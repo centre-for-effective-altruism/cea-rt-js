@@ -4,28 +4,78 @@
   The type annotations are just there in case they are helpful.
 */
 
-export class Rope {
+type MapBranch = {
+  left?: MapRepresentation,
+  right?: MapRepresentation,
+  size: number,
+  kind: 'branch'
+}
+type MapLeaf = {
+  text: string,
+  kind: 'leaf'
+}
+type MapRepresentation = MapBranch | MapLeaf
+
+interface IRope {
+  toString: () => string,
+  size: () => number,
+  height: () => number,
+  toMap: () => MapRepresentation,
+  isBalanced: () => Boolean
+}
+
+export class RopeLeaf implements IRope {
   text: string;
-  size: number;
-  left?: Rope;
-  right?: Rope;
 
   // Note: depending on your implementation, you may want to to change this constructor
-  constructor(text, size) {
+  constructor(text: string) {
     this.text = text;
-    this.size = size;
   }
 
   // just prints the stored text
   toString(): string {
-    const leftText = this.left ? this.left.toString() : ''
-    const rightText = this.right ? this.right.toString() : ''
-    return leftText + this.text + rightText
+    return this.text
+  }
+
+  size() {
+    return this.text.length;
+  }
+
+  height() {
+    return 1;
+  }
+
+  toMap(): MapLeaf {
+    return {
+      text: this.text,
+      kind: 'leaf'
+    }
+  }
+
+  isBalanced() {
+    return true;
+  }
+}
+
+export class RopeBranch implements IRope {
+  left: IRope;
+  right: IRope;
+  cachedSize: number;
+
+  constructor(left: IRope, right: IRope) {
+    this.left = left;
+    this.right = right;
+    this.cachedSize = (left ? left.size() : 0) +
+      (right ? right.size() : 0)
   }
 
   // how deep the tree is (I.e. the maximum depth of children)
   height(): number {
     return 1 + Math.max(this.leftHeight(), this.rightHeight())
+  }
+
+  size() {
+    return this.cachedSize;
   }
 
   /*
@@ -53,90 +103,48 @@ export class Rope {
   // Helper method which converts the rope into an associative array
   // 
   // Only used for debugging, this has no functional purpose
-  toMap(): MapRepresentation {
-    const mapVersion: MapRepresentation = {
-      text: this.text,
-      size: this.size
+  toMap(): MapBranch {
+    const mapVersion: MapBranch = {
+      size: this.size(),
+      kind: 'branch'
     }
     if (this.right) mapVersion.right = this.right.toMap()
     if (this.left) mapVersion.left = this.left.toMap()
     return mapVersion
   }
+
+  toString(): string {
+    return (this.left ? this.left.toString() : '')
+      + (this.right ? this.right.toString() : '')
+  }
 }
 
-type MapRepresentation = { text: string, left?: MapRepresentation, right?: MapRepresentation, size: number }
-export function createRopeFromMap(map: MapRepresentation): Rope {
-  const rope = new Rope(map.text, map.size)
-  if (map.left) rope.left = createRopeFromMap(map.left)
-  if (map.right) rope.right = createRopeFromMap(map.right)
-  return rope;
+
+export function createRopeFromMap(map: MapRepresentation): IRope {
+  if (map.kind == 'leaf') {
+    return new RopeLeaf(map.text)
+  }
+
+  let left, right = null;
+  if (map.left) left = createRopeFromMap(map.left)
+  if (map.right) right = createRopeFromMap(map.right)
+  return new RopeBranch(left, right);
 }
 
 // This is an internal API. You can implement it however you want. 
 // (E.g. you can choose to mutate the input rope or not)
-function splitAt(rope: Rope, position: number): { left: Rope, right: Rope } {
+function splitAt(rope: IRope, position: number): { left: IRope, right: IRope } {
   // TODO
-  return { left: undefined, right: undefined }
 }
 
-export function deleteRange(rope: Rope, start: number, end: number): Rope {
+export function deleteRange(rope: IRope, start: number, end: number): IRope {
   // TODO
-  return rope
 }
 
-export function insert(rope: Rope, text: string, location: number): Rope {
+export function insert(rope: IRope, text: string, location: number): IRope {
   // TODO
-  return rope
 }
 
-export function rebalance(rope: Rope): Rope {
+export function rebalance(rope: IRope): IRope {
   // TODO
-  return rope
-}
-
-
-/*
- Rotates a tree: used for rebalancing.
-
- Turns:
-    b
-  /  \
-  a   c
-
-  Into:
-     c
-    /
-   b
-  /
-a   
-*/
-export function rotateLeft(rope: Rope): Rope {
-  const newParent = rope.right
-  const newLeft = rope
-  newLeft.right = newParent.left
-  newParent.left = newLeft
-  return newParent
-}
-
-/*
- Rotates a tree: used for rebalancing.
-
- Turns:
-    b
-  /  \
-  a   c
-
-  Into:
-     a
-      \
-       b
-        \
-         c 
-*/
-export function rotateRight(rope: Rope): Rope {
-  const newParent = rope.left
-  const newRight = rope
-  newRight.left = newParent.right
-  newParent.right = newRight
-  return newParent
 }
