@@ -63,7 +63,7 @@ describe('Extra Credit: tree is rebalanced', () => {
       right: {
         kind: 'branch',
         left: { kind: 'leaf', text: 'c' },
-        right: { text: 'd' }
+        right: { kind: 'leaf', text: 'd' }
       }
     },
   }))).toEqual(createRopeFromMap({
