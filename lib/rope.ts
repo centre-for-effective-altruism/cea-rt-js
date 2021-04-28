@@ -73,7 +73,9 @@ export class RopeBranch implements IRope {
   height(): number {
     return 1 + Math.max(this.leftHeight(), this.rightHeight())
   }
-
+  
+  // Please note that this is defined differently from "weight" in the Wikipedia article.
+  // You may wish to rewrite this method or create a different one.
   size() {
     return this.cachedSize;
   }
