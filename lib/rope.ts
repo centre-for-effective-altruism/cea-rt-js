@@ -65,6 +65,8 @@ export class RopeBranch implements IRope {
   constructor(left: IRope, right: IRope) {
     this.left = left;
     this.right = right;
+    // Please note that this is defined differently from "weight" in the Wikipedia article.
+    // You may wish to rewrite this property or create a different one.
     this.cachedSize = (left ? left.size() : 0) +
       (right ? right.size() : 0)
   }
